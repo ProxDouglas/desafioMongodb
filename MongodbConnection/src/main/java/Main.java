@@ -15,11 +15,12 @@ public class Main {
 
 
         Testes ts = new Testes(db);
-        ts.update();
+//        ts.update();
 //        ts.inserirUsuario();
 //        ts.testeBusca();
 //        ts.deleteById();
-
+//        ts.findById();
+//        ts.findName();
 
     }
 

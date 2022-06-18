@@ -1,6 +1,7 @@
 package connections;
 
 
+
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
@@ -8,12 +9,19 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import model.Usuario;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.Arrays;
+
 
 public class OperationsUsuario {
 
@@ -42,7 +50,7 @@ public class OperationsUsuario {
                     .append("cargo", usuario.getCargo())
                     .append("email", usuario.getEmail())
                     .append("data_nascimento", usuario.getData_nascimento())
-                    .append("teleone", usuario.getTelefone())
+                    .append("telefone", usuario.getTelefone())
                     .append("admin", usuario.isAdmin())
                     .append("foto", usuario.getFoto())
                     .append("senha", usuario.getSenha())
@@ -58,17 +66,50 @@ public class OperationsUsuario {
         }
     }
 
+    public void updateSeguir(String idSeguidor, String idSeguido){
+        updateSeguidor(idSeguidor, idSeguido);
+        updateSeguido(idSeguidor, idSeguido);
+    }
 
-    public void seguirPerfil(String idUsuario, String nomeUsuario
-                            , String idP, String nomeP){
 
+    private void updateSeguidor(String idSeguidor, String idSeguido){
+
+        Usuario usuario = new Usuario();
         MongoCollection<Document> collection = getCollection();
 
-        Document query = new Document().append("_id", new ObjectId(idUsuario));
+        Document query = new Document().append("_id", new ObjectId(idSeguidor));
+
+        usuario = getById(new ObjectId(idSeguidor));
 
         Bson updates = Updates.combine(
-                Updates.set("seguindo_num",  1),
-                Updates.addToSet("seguindo", idP));
+                Updates.set("seguindo_num",  usuario.getSeguindo_num()+1),
+                Updates.addToSet("seguindo", idSeguido));
+
+        UpdateOptions options = new UpdateOptions().upsert(true);
+
+        try {
+            UpdateResult result = collection.updateOne(query, updates, options);
+
+            System.out.println("Modified document count: " + result.getModifiedCount());
+
+            System.out.println("Upserted id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
+        } catch (MongoException me) {
+            System.err.println("Unable to update due to an error: " + me);
+        }
+    }
+
+    private void updateSeguido(String idSeguidor, String nomeSeguido){
+
+        Usuario usuario = new Usuario();
+        MongoCollection<Document> collection = getCollection();
+
+        Document query = new Document().append("_id", new ObjectId(nomeSeguido));
+
+        usuario = getById(new ObjectId(idSeguidor));
+
+        Bson updates = Updates.combine(
+                Updates.set("seguindores_num",  usuario.getSeguindores_num() + 1),
+                Updates.addToSet("seguindores", idSeguidor));
 
         UpdateOptions options = new UpdateOptions().upsert(true);
 
@@ -97,40 +138,62 @@ public class OperationsUsuario {
         }
     }
 
-    private void desconectar(MongoCursor<Document> cursor){
-        cursor.close();
-    }
-
-    public void listarUsuarios(){
+    public Usuario getByName(String nome){
 
         MongoCollection<Document> collection = getCollection();
 
-        if(collection.countDocuments() > 0){
-            MongoCursor<Document> cursor = collection.find().iterator();
+        Document doc = collection.find(eq("nome", nome)).first();
+
+        return getByDoc(doc);
+
+    }
+
+    public Usuario getById(ObjectId _id){
+
+        MongoCollection<Document> collection = getCollection();
+
+        Document doc = collection.find(eq("_id", _id)).first();
+
+        return getByDoc(doc);
+    }
+
+    public Usuario getByDoc(Document doc){
+        Usuario usuario = new Usuario();
+
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(doc.toJson());
 
 
-            try{
-                System.out.println("Listando...");
-                System.out.println("------------");
-                while(cursor.hasNext()){
-                    String json = cursor.next().toJson();
+            usuario.set_id(new ObjectId(((JSONObject) jsonObject.get("_id")).get("$oid").toString()));
+            usuario.setNome(jsonObject.get("nome").toString());
+            usuario.setDepartamento(jsonObject.get("departamento").toString());
+            usuario.setCargo(jsonObject.get("cargo").toString());
+            usuario.setEmail(jsonObject.get("email").toString());
+            usuario.setData_nascimento(jsonObject.get("data_nascimento").toString());
+            usuario.setTelefone(jsonObject.get("telefone").toString());
+            usuario.setAdmin(Boolean.parseBoolean(jsonObject.get("admin").toString()));
+            usuario.setFoto(jsonObject.get("foto").toString());
+            usuario.setSeguindo_num(Integer.parseInt(jsonObject.get("seguindo_num").toString()));
+            usuario.setNome(jsonObject.get("seguidores_num").toString());
 
-                    System.out.println(json);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            desconectar(cursor);
+            JSONArray seguindo = (JSONArray) jsonObject.get("seguindo");
+            usuario.setSeguindo(seguindo);
 
+            JSONArray seguindores = (JSONArray) jsonObject.get("seguindores");
+            usuario.setNome(String.valueOf(seguindores));
 
+            JSONArray grupo = (JSONArray) jsonObject.get("grupo");
+            usuario.setNome(String.valueOf(grupo));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        return usuario;
     }
 
 
 }
-
-
 
 //mongodump --archive --db=case_rede_social | mongorestore --archive  --nsFrom='case_rede_social.*' --nsTo='case_rede_social_backup.*'
 

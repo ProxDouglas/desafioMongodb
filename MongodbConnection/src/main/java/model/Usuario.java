@@ -1,28 +1,34 @@
 package model;
 
-import java.awt.*;
+import org.bson.types.ObjectId;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Usuario {
 
-    private int _id;
+    private ObjectId _id;
     private String nome;
     private String departamento;
     private String cargo;
     private String email;
     private String data_nascimento;
     private String telefone;
-    private int admin;
+    private boolean admin;
     private String foto;
     private String senha;
     private int seguindo_num;
-    private List seguindo = null;
+    private List<String> seguindo ;
     private int seguindores_num;
-    private List seguidores = null;
-    private List grupos = null;
+    private List<String> seguidores;
+    private List<String> grupos ;
+
 
     public Usuario(String nome, String departamento, String cargo,
                    String email, String data_nascimento, String telefone,
-                   int admin, String foto, String senha) {
+                   boolean admin, String foto, String senha) {
         this.nome = nome;
         this.departamento = departamento;
         this.cargo = cargo;
@@ -34,9 +40,12 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public int get_id() {return _id;}
+    public Usuario(){}
 
-    public void set_id(int _id) {this._id = _id;}
+
+    public ObjectId get_id() {return _id;}
+
+    public void set_id(ObjectId _id) {this._id = _id;}
 
     public String getNome() {return nome;}
 
@@ -62,9 +71,9 @@ public class Usuario {
 
     public void setTelefone(String telefone) {this.telefone = telefone;}
 
-    public int isAdmin() {return admin;}
+    public boolean isAdmin() {return admin;}
 
-    public void setAdmin(int admin) {this.admin = admin;}
+    public void setAdmin(boolean admin) {this.admin = admin;}
 
     public String getFoto() {return foto;}
 
@@ -78,19 +87,19 @@ public class Usuario {
 
     public void setSeguindo_num(int seguindo_num) {this.seguindo_num = seguindo_num;}
 
-    public List getSeguindo() {return seguindo;}
+    public List<String> getSeguindo() {return seguindo;}
 
-    public void setSeguindo(List seguindo) {this.seguindo = seguindo;}
+    public void setSeguindo(ArrayList<String> seguindo) {this.seguindo = seguindo;}
 
     public int getSeguindores_num() {return seguindores_num;}
 
     public void setSeguindores_num(int seguindores_num) {this.seguindores_num = seguindores_num;}
 
-    public List getSeguidores() {return seguidores;}
+    public List<String> getSeguidores() {return seguidores;}
 
-    public void setSeguidores(List seguidores) {this.seguidores = seguidores;}
+    public void setSeguidores(ArrayList<String> seguidores) {this.seguidores = seguidores;}
 
-    public List getGrupos() {return grupos;}
+    public List<String> getGrupos() {return grupos;}
 
-    public void setGrupos(List grupos) {this.grupos = grupos;}
+    public void setGrupos(ArrayList<String> grupos) {this.grupos = grupos;}
 }
