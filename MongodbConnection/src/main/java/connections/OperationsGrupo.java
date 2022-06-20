@@ -10,6 +10,7 @@ import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import model.Grupo;
 
+import model.Usuario;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -38,7 +39,7 @@ public class OperationsGrupo {
 
 
 
-    public void inserirUsuario(Grupo grupo){
+    public void inserirGrupo(Grupo grupo){
 
 
         MongoCollection<Document> collection = getCollection();
@@ -72,8 +73,17 @@ public class OperationsGrupo {
         }
     }
 
+
+
     public void novoMembro(String id_usuario, String id_grupo){
 
+        addNovoMembroGrupo(id_usuario, id_grupo);
+        addGrupoMembro(id_usuario, id_grupo);
+
+    }
+
+
+    public void addNovoMembroGrupo(String id_usuario, String id_grupo){
         Grupo grupo = new Grupo();
 
         Document query = new Document().append("_id", new ObjectId(id_grupo));
@@ -82,7 +92,7 @@ public class OperationsGrupo {
 
         Bson updates = Updates.combine(
                 Updates.set("nummero_membros", grupo.getNumero_membros() + 1),
-                Updates.addToSet("genres", "Sports"));
+                Updates.addToSet("seguidores", id_usuario));
 
         UpdateOptions options = new UpdateOptions().upsert(true);
 
@@ -95,8 +105,34 @@ public class OperationsGrupo {
         } catch (MongoException me) {
             System.err.println("Unable to update due to an error: " + me);
         }
-
     }
+
+    public void addGrupoMembro(String id_usuario, String id_grupo){
+        Usuario usuario ;
+
+
+
+        Document query = new Document().append("_id", new ObjectId(id_usuario));
+
+        usuario = getByIdUsuario(new ObjectId(id_usuario));
+
+        Bson updates = Updates.combine(
+//                Updates.set("nummero_membros", usuario.getGrupos() + 1),
+                Updates.addToSet("grupos", id_grupo));
+
+        UpdateOptions options = new UpdateOptions().upsert(true);
+
+        try {
+            UpdateResult result = getCollection().updateOne(query, updates, options);
+
+            System.out.println("Modified document count: " + result.getModifiedCount());
+
+            System.out.println("Upserted id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
+        } catch (MongoException me) {
+            System.err.println("Unable to update due to an error: " + me);
+        }
+    }
+
 
     public Grupo getById(ObjectId _id){
 
@@ -123,6 +159,51 @@ public class OperationsGrupo {
         }
 
         return grupo;
+    }
+
+    public Usuario getByIdUsuario(ObjectId _id){
+
+        MongoCollection<Document> collection = getDB().getCollection("usuario");
+
+        Document doc = collection.find(eq("_id", _id)).first();
+
+        return getByDocUsuario(doc);
+    }
+
+    public Usuario getByDocUsuario(Document doc){
+        Usuario usuario = new Usuario();
+
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(doc.toJson());
+
+
+            usuario.set_id(new ObjectId(((JSONObject) jsonObject.get("_id")).get("$oid").toString()));
+            usuario.setNome(jsonObject.get("nome").toString());
+            usuario.setDepartamento(jsonObject.get("departamento").toString());
+            usuario.setCargo(jsonObject.get("cargo").toString());
+            usuario.setEmail(jsonObject.get("email").toString());
+            usuario.setData_nascimento(jsonObject.get("data_nascimento").toString());
+            usuario.setTelefone(jsonObject.get("telefone").toString());
+            usuario.setAdmin(Boolean.parseBoolean(jsonObject.get("admin").toString()));
+            usuario.setFoto(jsonObject.get("foto").toString());
+            usuario.setSeguindo_num(Integer.parseInt(jsonObject.get("seguindo_num").toString()));
+            usuario.setNome(jsonObject.get("seguidores_num").toString());
+
+            JSONArray seguindo = (JSONArray) jsonObject.get("seguindo");
+            usuario.setSeguindo(seguindo);
+
+            JSONArray seguindores = (JSONArray) jsonObject.get("seguidores");
+            usuario.setSeguidores(seguindores);
+
+
+            JSONArray grupo = (JSONArray) jsonObject.get("grupo");
+            usuario.setSeguindo(grupo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return usuario;
     }
 
 
