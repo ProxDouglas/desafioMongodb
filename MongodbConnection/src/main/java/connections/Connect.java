@@ -19,8 +19,10 @@ public class Connect {
 
     public MongoDatabase iniciandoBD(){
         MongoClient client = MongoClients.create("mongodb+srv://groupLobtec:redesocialLobtec@redesocial.eb5fwga.mongodb.net/?retryWrites=true&w=majority");
-        return client.getDatabase("case_rede_social_backup");
+        return client.getDatabase("case_rede_social");
     }
 
 
 }
+
+

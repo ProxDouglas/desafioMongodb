@@ -1,10 +1,16 @@
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoCollection;
+/**
+ * Observações sobre o codigo
+ *   1 - Não utilizar as funções de deletar
+ *
+ *
+ */
+
+
+
+
 import com.mongodb.client.MongoDatabase;
 import connections.Connect;
-import connections.OperationsUsuario;
-import model.Usuario;
-import org.bson.Document;
+
 
 public class Main {
 
@@ -21,6 +27,17 @@ public class Main {
 //        ts.deleteById();
 //        ts.findById();
 //        ts.findName();
+//        ts.acessandoSessao();
+//        ts.getByIdSessao();
+        ts.listarLogsUser();
+
+
+
+//        String str ="2022-06-18T21:36:01.52";
+//        LocalDateTime localDateTime = LocalDateTime.parse(str);
+//        System.out.println("LocalDateTime obj: "+localDateTime);
+
+
 
     }
 

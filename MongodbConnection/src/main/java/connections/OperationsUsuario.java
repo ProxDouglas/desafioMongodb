@@ -67,28 +67,32 @@ public class OperationsUsuario {
     }
 
     public void updateSeguir(String idSeguidor, String idSeguido){
-        updateSeguidor(idSeguidor, idSeguido);
-        updateSeguido(idSeguidor, idSeguido);
+
+        Usuario usuarioSeguidor, usuarioSeguido;
+
+
+
+        usuarioSeguido = getById(new ObjectId(idSeguido));
+        usuarioSeguidor = getById(new ObjectId(idSeguidor));
+
+
+        updateSeguidor(idSeguidor, idSeguido, usuarioSeguidor);
+        updateSeguido(idSeguidor, idSeguido, usuarioSeguido);
     }
 
 
-    private void updateSeguidor(String idSeguidor, String idSeguido){
-
-        Usuario usuario = new Usuario();
-        MongoCollection<Document> collection = getCollection();
+    private void updateSeguidor(String idSeguidor, String idSeguido, Usuario usuarioSeguidor){ //collection
 
         Document query = new Document().append("_id", new ObjectId(idSeguidor));
 
-        usuario = getById(new ObjectId(idSeguidor));
-
         Bson updates = Updates.combine(
-                Updates.set("seguindo_num",  usuario.getSeguindo_num()+1),
+                Updates.set("seguindo_num",  usuarioSeguidor.getSeguindo_num()+1),
                 Updates.addToSet("seguindo", idSeguido));
 
         UpdateOptions options = new UpdateOptions().upsert(true);
 
         try {
-            UpdateResult result = collection.updateOne(query, updates, options);
+            UpdateResult result = getCollection().updateOne(query, updates, options);
 
             System.out.println("Modified document count: " + result.getModifiedCount());
 
@@ -98,30 +102,26 @@ public class OperationsUsuario {
         }
     }
 
-    private void updateSeguido(String idSeguidor, String nomeSeguido){
+    private void updateSeguido(String idSeguidor, String idSeguido, Usuario usuarioSeguido){
 
-        Usuario usuario = new Usuario();
-        MongoCollection<Document> collection = getCollection();
+        Document query = new Document().append("_id", new ObjectId(idSeguido));
 
-        Document query = new Document().append("_id", new ObjectId(nomeSeguido));
 
-        usuario = getById(new ObjectId(idSeguidor));
+            Bson updates = Updates.combine(
+                    Updates.set("seguindores_num",  usuarioSeguido.getSeguindores_num() + 1),
+                    Updates.addToSet("seguindores", idSeguidor));
 
-        Bson updates = Updates.combine(
-                Updates.set("seguindores_num",  usuario.getSeguindores_num() + 1),
-                Updates.addToSet("seguindores", idSeguidor));
+            UpdateOptions options = new UpdateOptions().upsert(true);
 
-        UpdateOptions options = new UpdateOptions().upsert(true);
+            try {
+                UpdateResult result = getCollection().updateOne(query, updates, options);
 
-        try {
-            UpdateResult result = collection.updateOne(query, updates, options);
+                System.out.println("Modified document count: " + result.getModifiedCount());
 
-            System.out.println("Modified document count: " + result.getModifiedCount());
-
-            System.out.println("Upserted id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
-        } catch (MongoException me) {
-            System.err.println("Unable to update due to an error: " + me);
-        }
+                System.out.println("Upserted id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
+            } catch (MongoException me) {
+                System.err.println("Unable to update due to an error: " + me);
+            }
     }
 
     public void deleteByID(ObjectId _id){
@@ -179,11 +179,12 @@ public class OperationsUsuario {
             JSONArray seguindo = (JSONArray) jsonObject.get("seguindo");
             usuario.setSeguindo(seguindo);
 
-            JSONArray seguindores = (JSONArray) jsonObject.get("seguindores");
-            usuario.setNome(String.valueOf(seguindores));
+            JSONArray seguindores = (JSONArray) jsonObject.get("seguidores");
+            usuario.setSeguidores(seguindores);
+
 
             JSONArray grupo = (JSONArray) jsonObject.get("grupo");
-            usuario.setNome(String.valueOf(grupo));
+            usuario.setSeguindo(grupo);
 
         } catch (Exception e) {
             e.printStackTrace();
