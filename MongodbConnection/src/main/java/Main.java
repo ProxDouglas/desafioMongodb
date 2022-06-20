@@ -29,9 +29,9 @@ public class Main {
 //        ts.findName();
 //        ts.acessandoSessao();
 //        ts.getByIdSessao();
-        ts.listarLogsUser();
-
-
+//        ts.listarLogsUser();
+//        ts.criarPublicacao();
+        ts.descurtirPublicacao();
 
 //        String str ="2022-06-18T21:36:01.52";
 //        LocalDateTime localDateTime = LocalDateTime.parse(str);

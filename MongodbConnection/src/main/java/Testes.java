@@ -1,10 +1,10 @@
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import connections.OperationLogSessao;
+import connections.OperationsPublicacao;
 import connections.OperationsUsuario;
 import model.LogSessao;
+import model.Publicacao;
 import model.Usuario;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
@@ -104,6 +104,36 @@ public class Testes {
         lgs.listALlLogUser("62aded8d2563767d12a2f0c1");
 
     }
+
+
+    public void criarPublicacao(){
+        OperationsPublicacao opP = new OperationsPublicacao(getDB(), "publicacao");
+
+        Publicacao publi = new Publicacao();
+        publi.setIdUsuario("62ae859f91451e44c23c9d60");
+        publi.setTema("Motivacao");
+        publi.setDescricao("Comecei bem esse mês");
+        publi.setFotoPublicacao("https://tse2.mm.bing.net/th/id/OIP.AiOMO8aUk6gp3ck6_WGtWQHaFS?w=239&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7");
+        publi.setCurtida_num(0);
+        publi.setCurtidaDetalhe(null);
+        publi.setComentarios_num(0);
+        publi.setData(LocalDateTime.now());
+
+        opP.inserirPublicacao(publi);
+    }
+
+    public void curtirPublicacao(){
+        OperationsPublicacao opP = new OperationsPublicacao(getDB(), "publicacao");
+
+        opP.curtirPublicacao("62b086c8c8d2cd78245c2969", "62aded8d2563767d12a2f0c1");
+    }
+
+    public void descurtirPublicacao(){
+        OperationsPublicacao opP = new OperationsPublicacao(getDB(), "publicacao");
+
+        opP.descurtirPublicacao("62b086c8c8d2cd78245c2969", "62aded8d2563767d12a2f0c1");
+    }
+
 
 
 

@@ -1,15 +1,17 @@
 package model;
 
-import java.util.Date;
+import org.bson.types.ObjectId;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Publicacao {
 
 
-    private String idPublicacao;
+    private ObjectId _id;
     private String idUsuario;
-    private String nomeUsuario;
-    private String fotoUsuario;
+//    private String nomeUsuario;
+//    private String fotoUsuario;
     private String tema;
     private String descricao;
     private String fotoPublicacao;
@@ -17,23 +19,23 @@ public class Publicacao {
     private List<String> curtidaDetalhe; //String
     private List<Comentario> comentarios;
     private int comentarios_num;
-    private Date data;
+    private LocalDateTime data;
 
-    public String getIdPublicacao() {return idPublicacao;}
+    public ObjectId get_id() {return _id;}
 
-    public void setIdPublicacao(String idPublicacao) {this.idPublicacao = idPublicacao;}
+    public void set_id(ObjectId _id) {this._id = _id;}
 
     public String getIdUsuario() {return idUsuario;}
 
     public void setIdUsuario(String idUsuario) {this.idUsuario = idUsuario;}
 
-    public String getNomeUsuario() {return nomeUsuario;}
+//    public String getNomeUsuario() {return nomeUsuario;}
 
-    public void setNomeUsuario(String nomeUsuario) {this.nomeUsuario = nomeUsuario;}
+//    public void setNomeUsuario(String nomeUsuario) {this.nomeUsuario = nomeUsuario;}
 
-    public String getFotoUsuario() {return fotoUsuario;}
+//    public String getFotoUsuario() {return fotoUsuario;}
 
-    public void setFotoUsuario(String fotoUsuario) {this.fotoUsuario = fotoUsuario;}
+//    public void setFotoUsuario(String fotoUsuario) {this.fotoUsuario = fotoUsuario;}
 
     public String getTema() {return tema;}
 
@@ -63,26 +65,25 @@ public class Publicacao {
 
     public void setComentarios_num(int comentarios_num) {this.comentarios_num = comentarios_num;}
 
-    public Date getData() {return data;}
+    public LocalDateTime getData() {return data;}
 
-    public void setData(Date data) {
-
-
-
-
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 
 
-    public Publicacao(String idUsuario, String nomeUsuario, String fotoUsuario,
-                      String tema, String descricao, String fotoPublicacao, Date data) {
-        this.idUsuario = idUsuario;
-        this.nomeUsuario = nomeUsuario;
-        this.fotoUsuario = fotoUsuario;
-        this.tema = tema;
-        this.descricao = descricao;
-        this.fotoPublicacao = fotoPublicacao;
-        this.data = data;
-    }
+//    public Publicacao(String idUsuario, String nomeUsuario, String fotoUsuario,
+//                      String tema, String descricao, String fotoPublicacao, LocalDateTime data) {
+//        this.idUsuario = idUsuario;
+////        this.nomeUsuario = nomeUsuario;
+////        this.fotoUsuario = fotoUsuario;
+//        this.tema = tema;
+//        this.descricao = descricao;
+//        this.fotoPublicacao = fotoPublicacao;
+//        this.data = data;
+//    }
+
+
+
 }
 
