@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -150,16 +151,57 @@ public class Feed {
     public void threadingTopics(){
 
         List<String> temas = getTemas();
+        List<Integer> curtidas = new ArrayList();
+        List<Integer> comentarios = new ArrayList();
 
 
         if(temas != null){
             for(int i =0; i < temas.size(); i++){
 
-                System.out.print(temas.get(i) + ":  ");
-                System.out.println(getCollectionPub().countDocuments(and(eq("tema", temas.get(i)))));
+
+                try {
+                    Bson projectionFields = Projections.fields(
+                            Projections.include("curtida_num", "comentarios_num"),
+                            Projections.excludeId());
+
+                    MongoCursor<Document> cursor = getCollectionPub().find(eq("tema", temas.get(i)))
+                            .projection(projectionFields)
+                            .iterator();
+
+                    int curtida = 0, comentario = 0;
+                    while(cursor.hasNext()) {
+
+                        JSONObject jsonObject = (JSONObject) new JSONParser().parse(cursor.next().toJson());
+
+                        curtida = Integer.parseInt(jsonObject.get("curtida_num").toString()) + curtida;
+                        comentario = Integer.parseInt(jsonObject.get("comentarios_num").toString()) + comentario;
+
+//                System.out.println(teste);
+//                        temas.add(getTema(teste));
+
+                    }
+
+                    curtidas.add(curtida);
+                    comentarios.add(comentario);
+
+
+                        System.out.print(temas.get(i) + ":");
+                        System.out.print("  curtidas: " + curtidas.get(i));
+                        System.out.println("  comentarios: " + comentarios.get(i));
+                        System.out.println("=================================");
+                        System.out.println("=================================");
 
 
 
+//                    System.out.println(getCollectionPub().countDocuments(and(eq("tema", temas.get(i)))));
+
+
+
+                }catch (MongoException me){
+                    System.err.println("An error occurred: " + me);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
 
 
             }

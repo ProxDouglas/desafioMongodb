@@ -29,7 +29,7 @@ public class Testes {
         Grupo grupo = new Grupo();
 
         grupo.setId_adm("62ac9a742b95e80364fce177");
-        grupo.setNome("Lobtec");
+        grupo.setNome("Devs anonimos");
 
         opg.inserirGrupo(grupo);
 
@@ -39,12 +39,8 @@ public class Testes {
 
         OperationsGrupo opg = new OperationsGrupo(getDB(), "grupo");
 
-        Grupo grupo = new Grupo();
 
-        grupo.setId_adm("62ac9a742b95e80364fce177");
-        grupo.setNome("Lobtec");
-
-        opg.addNovoMembroGrupo("62aded8d2563767d12a2f0c1" ,"62b1aec0a23d7645806472b5");
+        opg.addNovoMembroGrupo("62ac9e3a2b95e80364fce17a" ,"62b1aec0a23d7645806472b5");
 
     }
 
@@ -82,8 +78,8 @@ public class Testes {
 //                "16/09/2000", "11 99999-8888", true,
 //                "https://upload.wikimedia.org/wikipedia/commons/6/6b/Taka_Shiba.jpg", "123456789");
 
-        Usuario us = new Usuario("Vitor Santos", "TI", "Developer", "dougdev@gmail.com",
-                "10/09/1999", "11 99999-8888", true,
+        Usuario us = new Usuario("Demetrio", "Tecnologia", "Trainee", "demetrio@gmail.com",
+                "20/09/1995", "11 99999-8888", true,
                 "https://upload.wikimedia.org/wikipedia/commons/6/6b/Taka_Shiba.jpg", "123456789");
 
 
@@ -158,8 +154,8 @@ public class Testes {
 
         Publicacao publi = new Publicacao();
         publi.setIdUsuario("62b082750748947acd0d20e3");
-        publi.setTema("Adm");
-        publi.setDescricao("Sou adm mesmo");
+        publi.setTema("Marco");
+        publi.setDescricao("Melhor chefe");
         publi.setFotoPublicacao("https://tse2.mm.bing.net/th/id/OIP.AiOMO8aUk6gp3ck6_WGtWQHaFS?w=239&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7");
         publi.setCurtida_num(0);
         publi.setCurtidaDetalhe(null);
