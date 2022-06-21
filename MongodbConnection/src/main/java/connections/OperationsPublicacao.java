@@ -75,14 +75,10 @@ public class OperationsPublicacao {
 
     public void curtirPublicacao(String id_publicacao, String id_usuario){
 
-        Publicacao publicacao = new Publicacao();
-
         Document query = new Document().append("_id", new ObjectId(id_publicacao));
 
-        publicacao = getByIdCurtidas(new ObjectId(id_publicacao));
-
         Bson updates = Updates.combine(
-                Updates.set("curtida_num", publicacao.getCurtida_num() + 1),
+                Updates.inc("curtida_num", +1),
                 Updates.addToSet("curtidaDetalhe", id_usuario));
 
         UpdateOptions options = new UpdateOptions().upsert(true);
@@ -101,7 +97,6 @@ public class OperationsPublicacao {
     }
 
     public void descurtirPublicacao(String id_publicacao, String id_usuario){
-        Publicacao publicacao = new Publicacao();
 
         Document query = new Document().append("_id", new ObjectId(id_publicacao));
 
@@ -110,10 +105,8 @@ public class OperationsPublicacao {
 
         getCollection().updateOne(match, new BasicDBObject("$pull", update));
 
-        publicacao = getByIdCurtidas(new ObjectId(id_publicacao));
-
         Bson updates = Updates.combine(
-                Updates.set("curtida_num", publicacao.getCurtida_num() - 1));
+                Updates.inc("curtida_num", -1));
 
         UpdateOptions options = new UpdateOptions().upsert(true);
 
@@ -129,16 +122,16 @@ public class OperationsPublicacao {
     }
 
 
-    public Publicacao getByIdCurtidas(ObjectId _id){
+    public Publicacao getByIdNumbers(ObjectId _id){
 
         Document doc = getCollection().find(eq("_id", _id)).first();
 
-        return getByDocCurtidas(doc);
+        return getByDocNumbers(doc);
     }
 
 
 
-    private Publicacao getByDocCurtidas(Document doc){
+    private Publicacao getByDocNumbers(Document doc){
         Publicacao publicacao = new Publicacao();
 
         try {
@@ -147,17 +140,13 @@ public class OperationsPublicacao {
 
             publicacao.set_id(new ObjectId(((JSONObject) jsonObject.get("_id")).get("$oid").toString()));
             publicacao.setCurtida_num(Integer.parseInt(jsonObject.get("curtida_num").toString()));
+            publicacao.setCurtida_num(Integer.parseInt(jsonObject.get("comentarios_num").toString()));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return publicacao;
-    }
-
-
-    public void comentar(){
-
     }
 
 

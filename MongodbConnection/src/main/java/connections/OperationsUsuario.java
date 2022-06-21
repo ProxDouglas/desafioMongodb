@@ -76,17 +76,17 @@ public class OperationsUsuario {
         usuarioSeguidor = getById(new ObjectId(idSeguidor));
 
 
-        updateSeguidor(idSeguidor, idSeguido, usuarioSeguidor);
-        updateSeguido(idSeguidor, idSeguido, usuarioSeguido);
+        updateSeguidor(idSeguidor, idSeguido);
+        updateSeguido(idSeguidor, idSeguido);
     }
 
 
-    private void updateSeguidor(String idSeguidor, String idSeguido, Usuario usuarioSeguidor){ //collection
+    private void updateSeguidor(String idSeguidor, String idSeguido){ //collection
 
         Document query = new Document().append("_id", new ObjectId(idSeguidor));
 
         Bson updates = Updates.combine(
-                Updates.set("seguindo_num",  usuarioSeguidor.getSeguindo_num()+1),
+                Updates.inc("seguindo_num",  1),
                 Updates.addToSet("seguindo", idSeguido));
 
         UpdateOptions options = new UpdateOptions().upsert(true);
@@ -102,13 +102,12 @@ public class OperationsUsuario {
         }
     }
 
-    private void updateSeguido(String idSeguidor, String idSeguido, Usuario usuarioSeguido){
+    private void updateSeguido(String idSeguidor, String idSeguido){
 
         Document query = new Document().append("_id", new ObjectId(idSeguido));
 
-
             Bson updates = Updates.combine(
-                    Updates.set("seguindores_num",  usuarioSeguido.getSeguindores_num() + 1),
+                    Updates.inc("seguindores_num",  1),
                     Updates.addToSet("seguindores", idSeguidor));
 
             UpdateOptions options = new UpdateOptions().upsert(true);
@@ -124,19 +123,51 @@ public class OperationsUsuario {
             }
     }
 
-    public void deleteByID(ObjectId _id){
-        MongoCollection<Document> collection = getCollection();
 
-        DeleteResult res = collection.deleteOne(new Document(("_id"), _id));
+    public void trocarSenha(String idUser, String senha){
 
-        if(res.getDeletedCount() == 1){
-            System.out.println("Excluido ------------");
-        }else if(res.getDeletedCount() > 1){
-            System.out.println("Deu ruim ------------");
-        }else{
-            System.out.println("Não possivel ------------");
+        Document query = new Document().append("_id", new ObjectId(idUser));
+
+        Bson updates = Updates.set("senha",  senha);
+
+        UpdateOptions options = new UpdateOptions().upsert(true);
+
+        try {
+            UpdateResult result = getCollection().updateOne(query, updates, options);
+
+            System.out.println("Senha alterada: " + result.getModifiedCount());
+
+            System.out.println("Alterado em id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
+        } catch (MongoException me) {
+            System.err.println("Unable to update due to an error: " + me);
         }
+
     }
+
+
+    public void trocarFoto(String idUser, String foto){
+
+        Document query = new Document().append("_id", new ObjectId(idUser));
+
+        Bson updates = Updates.set("foto",  foto);
+
+        UpdateOptions options = new UpdateOptions().upsert(true);
+
+        try {
+            UpdateResult result = getCollection().updateOne(query, updates, options);
+
+            System.out.println("Senha alterada: " + result.getModifiedCount());
+
+            System.out.println("Alterado em id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
+        } catch (MongoException me) {
+            System.err.println("Unable to update due to an error: " + me);
+        }
+
+    }
+
+
+
+
 
     public Usuario getByName(String nome){
 
@@ -191,6 +222,20 @@ public class OperationsUsuario {
         }
 
         return usuario;
+    }
+
+    public void deleteByID(ObjectId _id){
+        MongoCollection<Document> collection = getCollection();
+
+        DeleteResult res = collection.deleteOne(new Document(("_id"), _id));
+
+        if(res.getDeletedCount() == 1){
+            System.out.println("Excluido ------------");
+        }else if(res.getDeletedCount() > 1){
+            System.out.println("Deu ruim ------------");
+        }else{
+            System.out.println("Não possivel ------------");
+        }
     }
 
 

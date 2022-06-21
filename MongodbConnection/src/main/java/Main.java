@@ -31,7 +31,10 @@ public class Main {
 //        ts.getByIdSessao();
 //        ts.listarLogsUser();
 //        ts.criarPublicacao();
-        ts.descurtirPublicacao();
+//        ts.descurtirPublicacao();
+//        ts.comentarPublicacao();
+//        ts.feed();
+        ts.threadingTopics();
 
 //        String str ="2022-06-18T21:36:01.52";
 //        LocalDateTime localDateTime = LocalDateTime.parse(str);

@@ -1,34 +1,55 @@
 package model;
 
+import org.bson.types.ObjectId;
+
+import java.time.LocalDateTime;
+
 public class Comentario {
 
-    private int idUsuario;
+    private ObjectId _id;
+    private String idUsuario;
     private String nomeUsuario;
-    private String fotoUsuario;
+//    private String fotoUsuario;
     private String texto;
+    private LocalDateTime data;
 
+    public ObjectId get_id() {
+        return _id;
+    }
 
-    public int getIdUsuario() {return idUsuario;}
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
 
-    public void setIdUsuario(int idUsuario) {this.idUsuario = idUsuario;}
+    public String getIdUsuario() {
+        return idUsuario;
+    }
 
-    public String getNomeUsuario() {return nomeUsuario;}
-
-    public void setNomeUsuario(String nomeUsuario) {this.nomeUsuario = nomeUsuario;}
-
-    public String getFotoUsuario() {return fotoUsuario;}
-
-    public void setFotoUsuario(String fotoUsuario) {this.fotoUsuario = fotoUsuario;}
-
-    public String getTexto() {return texto;}
-
-    public void setTexto(String texto) {this.texto = texto;}
-
-
-    public Comentario(int idUsuario, String nomeUsuario, String fotoUsuario, String texto) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public void setNomeUsuario(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
-        this.fotoUsuario = fotoUsuario;
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    public void setTexto(String texto) {
         this.texto = texto;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
     }
 }
