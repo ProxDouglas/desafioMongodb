@@ -2,6 +2,10 @@ package connections;
 
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.mongodb.MongoException;
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
@@ -19,8 +23,11 @@ import org.json.simple.parser.JSONParser;
 
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.lt;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class OperationsUsuario {
@@ -235,6 +242,34 @@ public class OperationsUsuario {
             System.out.println("Deu ruim ------------");
         }else{
             System.out.println("Não possivel ------------");
+        }
+    }
+
+
+    public void allUsuario(){
+
+
+        Bson projectionFields = Projections.fields(
+                Projections.include( "nome","departamento", "cargo", "email"));
+
+//        MongoCursor<Document> cursor = getCollectionPub().find(and(lt("data", LocalDateTime.now()),  gte("data", yesterday())))
+        MongoCursor<Document> cursor = getCollection().find()
+                .projection(projectionFields)
+                .sort(Sorts.descending("_id")).iterator();
+
+        try {
+
+            while(cursor.hasNext()) {
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement je = JsonParser.parseString(cursor.next().toJson());
+                String prettyJsonString = gson.toJson(je);
+
+                System.out.println(prettyJsonString);
+                System.out.println("==============================");
+            }
+        } finally {
+            cursor.close();
         }
     }
 

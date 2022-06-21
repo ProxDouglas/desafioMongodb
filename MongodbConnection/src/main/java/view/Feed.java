@@ -156,7 +156,11 @@ public class Feed {
             for(int i =0; i < temas.size(); i++){
 
                 System.out.print(temas.get(i) + ":  ");
-                System.out.println(getCollectionPub().countDocuments(eq("tema", temas.get(i))));
+                System.out.println(getCollectionPub().countDocuments(and(eq("tema", temas.get(i)))));
+
+
+
+
 
             }
         }else{

@@ -34,11 +34,28 @@ public class Main {
 //        ts.descurtirPublicacao();
 //        ts.comentarPublicacao();
 //        ts.feed();
+//        ts.threadingTopics();
+
+
+/**
+ * Apresentação
+ */
+
+//        ts.criarGrupo();
+//        ts.addGrupo();
+//        ts.feed();
+//        ts.listUsuarios();
+        //Nino segue Arthur
+//        ts.Seguir("62b090203d05a9160bd87035","62b082750748947acd0d20e3");
+//        //Marcos Bento segue Nino Silva
+//        ts.Seguir("62b08f9f476563214508afc4","62b090203d05a9160bd87035");
+//        ts.listGroup();
+
+//        ts.feed();
+
+//        ts.comentarPublicacao();
         ts.threadingTopics();
 
-//        String str ="2022-06-18T21:36:01.52";
-//        LocalDateTime localDateTime = LocalDateTime.parse(str);
-//        System.out.println("LocalDateTime obj: "+localDateTime);
 
 
 

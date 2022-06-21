@@ -1,8 +1,15 @@
 package connections;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
@@ -50,7 +57,7 @@ public class OperationsGrupo {
                     .append("id_adm", grupo.getId_adm())
                     .append("nome", grupo.getNome())
                     .append("numero_membros", 0)
-                    .append("usuarios", Arrays.asList()));
+                    .append("seguidores", Arrays.asList()));
 
             System.out.println("Success! Inserted document id: " + result.getInsertedId());
         } catch (MongoException me) {
@@ -204,6 +211,35 @@ public class OperationsGrupo {
         }
 
         return usuario;
+    }
+
+    public void listGroup(){
+
+
+        Bson projectionFields = Projections.fields(
+                Projections.include( "nome","id_adm", "numero_membros", "email", "seguidores"));
+
+//        MongoCursor<Document> cursor = getCollectionPub().find(and(lt("data", LocalDateTime.now()),  gte("data", yesterday())))
+        MongoCursor<Document> cursor = getCollection().find()
+                .projection(projectionFields)
+                .sort(Sorts.descending("_id")).iterator();
+
+        try {
+
+            while(cursor.hasNext()) {
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement je = JsonParser.parseString(cursor.next().toJson());
+                String prettyJsonString = gson.toJson(je);
+
+                System.out.println(prettyJsonString);
+                System.out.println("=======================================================");
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println("=======================================================");
+            }
+        } finally {
+            cursor.close();
+        }
     }
 
 

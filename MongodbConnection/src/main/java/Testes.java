@@ -1,12 +1,6 @@
 import com.mongodb.client.MongoDatabase;
-import connections.OparationsComentario;
-import connections.OperationLogSessao;
-import connections.OperationsPublicacao;
-import connections.OperationsUsuario;
-import model.Comentario;
-import model.LogSessao;
-import model.Publicacao;
-import model.Usuario;
+import connections.*;
+import model.*;
 import org.bson.types.ObjectId;
 import view.Feed;
 
@@ -25,6 +19,56 @@ public class Testes {
     public Testes(MongoDatabase db) {
         this.db = db;
         this.opu= new OperationsUsuario(db, "usuario");
+    }
+
+
+    public void criarGrupo(){
+
+        OperationsGrupo opg = new OperationsGrupo(getDB(), "grupo");
+
+        Grupo grupo = new Grupo();
+
+        grupo.setId_adm("62ac9a742b95e80364fce177");
+        grupo.setNome("Lobtec");
+
+        opg.inserirGrupo(grupo);
+
+    }
+
+    public void addGrupo(){
+
+        OperationsGrupo opg = new OperationsGrupo(getDB(), "grupo");
+
+        Grupo grupo = new Grupo();
+
+        grupo.setId_adm("62ac9a742b95e80364fce177");
+        grupo.setNome("Lobtec");
+
+        opg.addNovoMembroGrupo("62aded8d2563767d12a2f0c1" ,"62b1aec0a23d7645806472b5");
+
+    }
+
+    public void listGroup(){
+
+        OperationsGrupo opg = new OperationsGrupo(getDB(), "grupo");
+
+        opg.listGroup();
+
+    }
+
+
+    public void listUsuarios(){
+        OperationsUsuario opu = new OperationsUsuario(getDB(), "usuario");
+
+
+        opu.allUsuario();
+    }
+
+    public void Seguir(String idSeguidor, String idSeguido){
+        OperationsUsuario opu = new OperationsUsuario(getDB(), "usuario");
+
+
+        opu.updateSeguir(idSeguidor, idSeguido);
     }
 
     public void inserirUsuario(){
@@ -145,9 +189,9 @@ public class Testes {
         Comentario comentario = new Comentario();
         comentario.setIdUsuario("62aded8d2563767d12a2f0c1");
         comentario.setNomeUsuario("Helena");
-        comentario.setTexto("Nossa que cachrrinho lindooo!! S2");
+        comentario.setTexto("ADM arrasa");
 
-        opC.comentarPublicacao(comentario, "62aca20e2b95e80364fce17c");
+        opC.comentarPublicacao(comentario, "62b0fe7c7372817159597cec");
     }
 
 
